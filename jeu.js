@@ -115,10 +115,12 @@ function majPanier(dt) {
   panier.vitesse = (panier.x - avant) / Math.max(dt, 0.001);
 }
 function estAttrape(objet) {
+  // la voiture adverse est plus large que les ballons, sa zone de choc aussi
+  const demiLargeur = objet.type === BOMBE ? objet.rayon * 1.3 : objet.rayon * 0.5;
   return objet.y + objet.rayon >= panier.y &&
     objet.y - objet.rayon <= panier.y + panier.hauteur &&
-    objet.x + objet.rayon * 0.5 >= panier.x &&
-    objet.x - objet.rayon * 0.5 <= panier.x + panier.largeur;
+    objet.x + demiLargeur >= panier.x &&
+    objet.x - demiLargeur <= panier.x + panier.largeur;
 }
 function toucherObjet(objet) {
   if (objet.type === BOMBE) {
