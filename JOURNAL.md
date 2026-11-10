@@ -42,11 +42,11 @@ Comment le combo est-il remis à zéro ?
 - Mon prompt en mode Plan :
 
 ```
-(colle-le ici)
+Je veux ajouter un cristal de glace, plus rare que le doré. Quand on l'attrape, tous les objets ralentissent pendant 4 secondes, puis reprennent leur vitesse. Respecte les règles de .github/copilot-instructions.md. Propose un plan sans modifier le code.
 ```
 
 - Le plan est dans le fichier `PLAN.md`.
-- Ce que j'ai changé dans le plan avant de le valider (étape retirée, ajoutée, contrainte) et pourquoi :
+- Ce que j'ai changé dans le plan avant de le valider (étape retirée, ajoutée, contrainte) et pourquoi : j'ai retiré l'étape 7 (le son), parce qu'il n'est pas demandé et que ça limite les lignes ajoutées. Claude a signalé que le JavaScript fait déjà 604 lignes alors que la règle dit moins de 600 : j'ai décidé d'accepter de dépasser, parce que la fonctionnalité compte plus. J'ai ajouté une ligne « Comment vérifier dans le jeu » : jouer normalement jusqu'à attraper un cristal de glace et regarder si tout ralentit pendant 4 secondes. J'ai choisi ces modifications parmi des options que Claude m'a proposées, et c'est Claude qui a écrit le fichier.
 
 ## Défi 4 - Agent
 
