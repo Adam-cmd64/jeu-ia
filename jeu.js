@@ -18,6 +18,7 @@ const recordTitre = document.getElementById("record-titre");
 const finScore = document.getElementById("fin-score");
 const finRecord = document.getElementById("fin-record");
 const badgeRecord = document.getElementById("badge-record");
+const elementBouclier = document.getElementById("bouclier");
 // L'état de la partie.
 let etat = "titre";
 let score = 0;
@@ -28,6 +29,7 @@ let tempsJeu = 0;
 let combo = 0;
 let cristaux = 0;
 let chronoGlace = 0;
+let bouclier = false;
 let chronoCombo = 0;
 let objets = [];
 let chronoSpawn = 0;
@@ -52,6 +54,7 @@ function majHud() {
   for (let i = 0; i < elementVies.length; i++) {
     elementVies[i].classList.toggle("perdue", i >= vies);
   }
+  elementBouclier.style.visibility = bouclier ? "visible" : "hidden";
   elementComboJauge.style.transform = "scaleX(" + Math.max(0, chronoCombo / REGLAGES.dureeCombo) + ")";
 }
 // Lancer, terminer et recommencer une partie.
@@ -60,7 +63,7 @@ function demarrerPartie() {
   etat = "jeu";
   score = 0; vies = REGLAGES.viesDepart; niveau = 1; tempsJeu = 0;
   combo = 0; chronoCombo = 0; objets = []; chronoSpawn = 0.45;
-    cristaux = 0; chronoGlace = 0;
+    cristaux = 0; chronoGlace = 0; bouclier = false;
   panier.x = LARGEUR / 2 - panier.largeur / 2; panier.cibleX = null; panier.vitesse = 0;
   ecranTitre.classList.add("cache");
   ecranFin.classList.add("cache");
@@ -120,6 +123,13 @@ function estAttrape(objet) {
 function toucherObjet(objet) {
   if (objet.type === BOMBE) {
     creerParticules(objet.x, objet.y, COULEURS.magenta, 28, 320);
+    if (bouclier) {
+      // le bouclier absorbe la voiture adverse
+      bouclier = false;
+      ajouterTexte(objet.x, objet.y - 10, "BOUCLIER CASSÉ", COULEURS.cyan);
+      secouer(6);
+      return;
+    }
     perdreVie(objet.x, objet.y, true);
     return;
   }
@@ -133,7 +143,12 @@ function toucherObjet(objet) {
   cristaux += 1;
   creerParticules(objet.x, objet.y, couleur, objet.type === DORE ? 24 : 14, 280);
   ajouterTexte(objet.x, objet.y - 10, "+" + points, couleur);
-  if (objet.type === DORE) { sonDore(); flasher(COULEURS.or, 0.18); }
+  if (objet.type === DORE) {
+    // le trophee donne un bouclier
+    sonDore(); flasher(COULEURS.or, 0.18);
+    bouclier = true;
+    ajouterTexte(LARGEUR / 2, HAUTEUR * 0.45, "BOUCLIER", COULEURS.or);
+  }
   else if (objet.type === GLACE) {
     // le cristal de glace ralentit tous les objets
     chronoGlace = REGLAGES.dureeGlace;
@@ -196,8 +211,8 @@ function mettreAJour(dt) {
     } else if (objet.y - objet.rayon > HAUTEUR + 20) {
       objets.splice(i, 1);
       if (objet.type === CRISTAL) perdreVie(objet.x, HAUTEUR - 30, false);
-      else if (objet.type === DORE) ajouterTexte(objet.x, HAUTEUR - 40, "CRISTAL DORÉ PERDU", COULEURS.or);
-      else if (objet.type === GLACE) ajouterTexte(objet.x, HAUTEUR - 40, "GLACE PERDUE", COULEURS.glace);
+      else if (objet.type === DORE) ajouterTexte(objet.x, HAUTEUR - 40, "TROPHÉE PERDU", COULEURS.or);
+      else if (objet.type === GLACE) ajouterTexte(objet.x, HAUTEUR - 40, "BALLON GELÉ PERDU", COULEURS.glace);
     }
   }
   majHud();

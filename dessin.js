@@ -86,54 +86,60 @@ function dessinerCristal(ctx, objet, temps) {
   const glace = objet.type === GLACE;
   const couleur = dore ? COULEURS.or : glace ? COULEURS.glace : COULEURS.cyan;
   const battement = 1 + 0.06 * Math.sin(temps * 5 + objet.pulsation);
-  ctx.rotate(objet.rotation);
   ctx.scale(battement, battement);
   ctx.shadowColor = couleur;
   ctx.shadowBlur = 20;
-  ctx.beginPath();
-  ctx.moveTo(0, -r);
-  ctx.lineTo(r * 0.62, 0);
-  ctx.lineTo(0, r);
-  ctx.lineTo(-r * 0.62, 0);
-  ctx.closePath();
-  ctx.fillStyle = dore ? "rgba(255, 209, 102, 0.22)" : glace ? "rgba(234, 246, 255, 0.45)" : "rgba(40, 240, 255, 0.2)";
-  ctx.fill();
   ctx.strokeStyle = couleur;
   ctx.lineWidth = 2;
+  if (dore) {
+    // trophee : une coupe, un pied et un socle
+    ctx.fillStyle = "rgba(255, 209, 102, 0.3)";
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.8, -r);
+    ctx.lineTo(r * 0.8, -r);
+    ctx.lineTo(r * 0.4, 0);
+    ctx.lineTo(-r * 0.4, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillRect(-r * 0.12, 0, r * 0.24, r * 0.6);
+    ctx.strokeRect(-r * 0.5, r * 0.6, r, r * 0.3);
+    return;
+  }
+  // ballon : un cercle avec un pentagone blanc au centre
+  ctx.rotate(objet.rotation);
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fillStyle = glace ? "rgba(234, 246, 255, 0.45)" : "rgba(40, 240, 255, 0.2)";
+  ctx.fill();
   ctx.stroke();
   ctx.fillStyle = COULEURS.blanc;
   ctx.beginPath();
-  ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2);
+  for (let i = 0; i < 5; i++) {
+    const angle = i * Math.PI * 2 / 5 - Math.PI / 2;
+    ctx.lineTo(Math.cos(angle) * r * 0.4, Math.sin(angle) * r * 0.4);
+  }
+  ctx.closePath();
   ctx.fill();
 }
 function dessinerBombe(ctx, objet, temps) {
-  const r = objet.rayon * (1 + 0.09 * Math.sin(temps * 9 + objet.pulsation));
-  ctx.rotate(objet.rotation * 0.4);
+  // voiture adverse : carrosserie, cabine et deux roues
+  const r = objet.rayon * (1 + 0.06 * Math.sin(temps * 9 + objet.pulsation));
+  ctx.rotate(Math.sin(objet.rotation) * 0.3);
   ctx.shadowColor = COULEURS.rouge;
   ctx.shadowBlur = 22;
-  ctx.strokeStyle = COULEURS.rouge;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  for (let i = 0; i < 8; i++) {
-    const angle = i * Math.PI / 4;
-    ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
-    ctx.lineTo(Math.cos(angle) * (r + 7), Math.sin(angle) * (r + 7));
-  }
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI * 2);
   ctx.fillStyle = "#1a0614";
-  ctx.fill();
-  ctx.strokeStyle = COULEURS.magenta;
+  ctx.strokeStyle = COULEURS.rouge;
   ctx.lineWidth = 2;
-  ctx.stroke();
+  ctx.fillRect(-r * 1.3, -r * 0.4, r * 2.6, r * 0.8);
+  ctx.strokeRect(-r * 1.3, -r * 0.4, r * 2.6, r * 0.8);
+  ctx.strokeStyle = COULEURS.magenta;
+  ctx.strokeRect(-r * 0.6, -r * 0.9, r * 1.1, r * 0.5);
   ctx.fillStyle = COULEURS.rouge;
   ctx.beginPath();
-  ctx.arc(0, 0, r * 0.34, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = COULEURS.blanc;
-  ctx.beginPath();
-  ctx.arc(-r * 0.12, -r * 0.12, r * 0.1, 0, Math.PI * 2);
+  ctx.arc(-r * 0.75, r * 0.45, r * 0.32, 0, Math.PI * 2);
+  ctx.moveTo(r * 1.07, r * 0.45);
+  ctx.arc(r * 0.75, r * 0.45, r * 0.32, 0, Math.PI * 2);
   ctx.fill();
 }
 function dessinerObjet(ctx, objet, temps) {
