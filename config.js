@@ -15,7 +15,7 @@ const COULEURS = {
   cyan: "#28f0ff",
   magenta: "#ff3ea5",
   or: "#ffd166",
-  glace: "#9fdcff",
+  glace: "#eaf6ff",
   rouge: "#ff4d6d",
   blanc: "#f5f7ff",
   grille: "rgba(40, 240, 255, 0.16)"
@@ -33,7 +33,7 @@ const REGLAGES = {
   multiplicateurMax: 5,
   hasardBombe: 0.14,
   hasardDore: 0.05,
-  hasardGlace: 0.02,     // plus rare que le dore
+  hasardGlace: 0.02,    // plus rare que le dore
   dureeGlace: 4,         // secondes de ralenti
   ralentiGlace: 0.4,     // vitesse des objets pendant le gel
   largeurPanier: 96,
