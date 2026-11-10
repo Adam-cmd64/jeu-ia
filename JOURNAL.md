@@ -70,13 +70,13 @@ Format : explique en 2 phrases ce que tu changes et dis comment vérifier dans l
 
 ## Défi 5 - Pull request et revue
 
-- Lien de ma pull request :
-- Commentaire de la revue Copilot que j'ai traité (le texte) :
-- Ma décision (corrigé ou refusé) et pourquoi :
-- Lien de mon jeu publié :
+- Lien de ma pull request : https://github.com/Adam-cmd64/jeu-ia/pull/1
+- Commentaire de la revue Copilot que j'ai traité (le texte) : Copilot n'était pas proposé comme relecteur sur mon compte, donc la revue a été faite par Claude et postée sur la PR. Remarque traitée : « Hitbox des voitures (jeu.js, estAttrape) : la voiture est dessinée sur 2,6 fois son rayon en largeur, mais la collision n'utilise que la moitié du rayon de chaque côté. On peut toucher visuellement une voiture sans perdre de vie. »
+- Ma décision (corrigé ou refusé) et pourquoi : corrigé (commit « defi 5 : hitbox des voitures (revue) »), parce que c'est bizarre de toucher une voiture sans perdre de vie. J'ai refusé la remarque sur la limite des 600 lignes, parce que j'avais déjà décidé au défi 3 d'accepter de dépasser. Les remarques sur le README et l'indentation ne sont pas retenues. Ma réponse est écrite sur la PR.
+- Lien de mon jeu publié : https://adam-cmd64.github.io/jeu-ia/
 
 ## Bilan (3 lignes maximum)
 
-- Ce que l'assistant a fait mieux ou plus vite que moi :
-- Ce qu'il a mal fait ou ce que j'ai dû corriger :
-- Ce que je ne lui laisserais pas faire :
+- Ce que l'assistant a fait mieux ou plus vite que moi : expliquer le code (la boucle, la chute des objets et le combo) simplement.
+- Ce qu'il a mal fait ou ce que j'ai dû corriger : la couleur du cristal de glace, trop proche du cyan, et le « GEL » qu'on ne voyait pas.
+- Ce que je ne lui laisserais pas faire : décider à ma place ; les choix (thème, corrections, refus) doivent rester les miens.
