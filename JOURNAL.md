@@ -1,8 +1,8 @@
 # Journal de bord
 
-Nom et prénom : 
-Dépôt : 
-Outil utilisé (Copilot, modèle affiché) : 
+Nom et prénom : Adam Rida
+Dépôt : https://github.com/Adam-cmd64/jeu-ia
+Outil utilisé (Copilot, modèle affiché) : Claude (chat), car Copilot ne fonctionnait pas sur mon compte. Claude ne lit pas mes fichiers tout seul : il m'a proposé le code à partir du sujet, et je l'ai collé moi-même dans VS Code.
 
 Règle : tu colles ici le texte exact de tes prompts (copier-coller, pas de capture). Une entrée par défi. Ce que tu n'as pas gardé compte autant que ce que tu as gardé.
 
@@ -11,12 +11,13 @@ Règle : tu colles ici le texte exact de tes prompts (copier-coller, pas de capt
 - Commentaire ou début de code que j'ai écrit :
 
 ```
-(colle-le ici)
+// compte les cristaux attrapés dans la variable cristaux
+// affiche le nombre de cristaux attrapés sur l'écran de fin
 ```
 
-- Ce que Copilot a proposé :
-- Ce que j'ai accepté, modifié ou refusé, et pourquoi :
-- Comment j'ai vérifié que ça marche :
+- Ce que Claude a proposé : déclarer `let cristaux = 0;` en haut de jeu.js, ajouter `cristaux += 1;` dans toucherObjet après le calcul des points (donc pas pour les bombes, à cause du `return` au début), remettre `cristaux = 0;` dans demarrerPartie, et afficher le nombre dans terminerPartie. Il a aussi fallu ajouter une ligne dans index.html pour avoir un endroit où afficher le nombre sur l'écran de fin.
+- Ce que j'ai accepté, modifié ou refusé, et pourquoi : j'ai tout accepté tel quel, parce que les bombes ne sont pas comptées : le return arrête la fonction avant le +1.
+- Comment j'ai vérifié que ça marche : j'ai rechargé index.html et joué une partie : « CRISTAUX 8 » s'affichait sur l'écran de fin.Lorsque j'ai relancé une nouvelle partie en haut à gauche c'était vide y avait 0.
 
 ## Défi 2 - Ask
 
