@@ -50,16 +50,23 @@ Je veux ajouter un cristal de glace, plus rare que le doré. Quand on l'attrape,
 
 ## Défi 4 - Agent
 
-- Mon prompt en mode Agent :
+- Mon prompt en mode Agent (avec Claude à la place de l'agent Copilot) :
+
+Premier prompt : j'ai demandé à Claude d'appliquer PLAN.md (« vasy fait »).
+
+Deuxième prompt, en 4 blocs (construit à partir d'un modèle de Claude, avec mes choix : thème voiture-foot, nom ROCKET BALL, bouclier au trophée) :
 
 ```
-(colle-le ici)
+Objectif : ajoute un bouclier qui absorbe la prochaine bombe, visible dans le HUD. Change aussi le thème du jeu en voiture-foot, avec ROCKET BALL comme nom du jeu.
+Contexte : jeu web en JavaScript simple (jeu.js, config.js, dessin.js). Les cristaux deviennent des ballons, le doré un trophée, la glace un ballon gelé, et les bombes des voitures adverses (démolition).
+Contraintes : respecte .github/copilot-instructions.md, les réglages restent dans config.js, on obtient le bouclier en attrapant un trophée (doré).
+Format : explique en 2 phrases ce que tu changes et dis comment vérifier dans le jeu.
 ```
 
-- Fichiers que l'agent a modifiés :
-- Ce que j'ai relu dans les changements avant d'accepter :
-- Ce que j'ai refusé, corrigé ou fait refaire :
-- Mon jeu après l'agent (une phrase) :
+- Fichiers que l'agent a modifiés : config.js, jeu.js, dessin.js, index.html (et .github/copilot-instructions.md pour ajouter mes deux lignes de thème).
+- Ce que j'ai relu dans les changements avant d'accepter : j'ai testé chaque version dans le jeu : le cristal de glace et le ralenti, puis le thème (titre ROCKET BALL, ballons, voitures, trophée) et le bouclier (il absorbe une voiture, puis la voiture suivante enlève bien une vie).
+- Ce que j'ai refusé, corrigé ou fait refaire : dans la première version du cristal de glace, le bleu se distinguait mal du cyan et je ne voyais pas « GEL » ni de chrono. Je l'ai dit à Claude (« le bleu ne se distingue pas trop oui , et Gel ne s'affiche pas, genre y a pas de chrono »). Il a mis la glace en blanc, plus grosse, avec des étincelles, et un chrono « GEL x s » en haut de l'écran. Pour tester, il a mis la glace à 30 % puis l'a remise à 2 % avant le commit. Commits : « defi 4 : cristal de glace » puis « defi 4 : glace plus visible et chrono du gel ».
+- Mon jeu après l'agent (une phrase) : ROCKET BALL, un jeu voiture-foot où on attrape des ballons et des trophées (qui donnent un bouclier), où le ballon gelé ralentit tout pendant 4 secondes, et où il faut éviter les voitures adverses.
 
 ## Défi 5 - Pull request et revue
 

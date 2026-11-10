@@ -18,6 +18,7 @@ const recordTitre = document.getElementById("record-titre");
 const finScore = document.getElementById("fin-score");
 const finRecord = document.getElementById("fin-record");
 const badgeRecord = document.getElementById("badge-record");
+const elementBouclier = document.getElementById("bouclier");
 // L'état de la partie.
 let etat = "titre";
 let score = 0;
@@ -27,6 +28,8 @@ let niveau = 1;
 let tempsJeu = 0;
 let combo = 0;
 let cristaux = 0;
+let chronoGlace = 0;
+let bouclier = false;
 let chronoCombo = 0;
 let objets = [];
 let chronoSpawn = 0;
@@ -51,6 +54,7 @@ function majHud() {
   for (let i = 0; i < elementVies.length; i++) {
     elementVies[i].classList.toggle("perdue", i >= vies);
   }
+  elementBouclier.style.visibility = bouclier ? "visible" : "hidden";
   elementComboJauge.style.transform = "scaleX(" + Math.max(0, chronoCombo / REGLAGES.dureeCombo) + ")";
 }
 // Lancer, terminer et recommencer une partie.
@@ -59,7 +63,7 @@ function demarrerPartie() {
   etat = "jeu";
   score = 0; vies = REGLAGES.viesDepart; niveau = 1; tempsJeu = 0;
   combo = 0; chronoCombo = 0; objets = []; chronoSpawn = 0.45;
-    cristaux = 0;
+    cristaux = 0; chronoGlace = 0; bouclier = false;
   panier.x = LARGEUR / 2 - panier.largeur / 2; panier.cibleX = null; panier.vitesse = 0;
   ecranTitre.classList.add("cache");
   ecranFin.classList.add("cache");
@@ -88,8 +92,9 @@ function creerObjet() {
   const tirage = Math.random();
   let type = CRISTAL;
   if (tirage < Math.min(0.42, REGLAGES.hasardBombe + (niveau - 1) * 0.03)) type = BOMBE;
-  else if (tirage > 1 - REGLAGES.hasardDore) type = DORE;
-  const rayon = type === DORE ? 17 : type === BOMBE ? 15 : 13;
+  else if (tirage > 1 - REGLAGES.hasardGlace) type = GLACE;
+  else if (tirage > 1 - REGLAGES.hasardGlace - REGLAGES.hasardDore) type = DORE;
+  const rayon = type === DORE || type === GLACE ? 17 : type === BOMBE ? 15 : 13;
   const vitesse = Math.min(REGLAGES.vitesseChuteMax, REGLAGES.vitesseChute + (niveau - 1) * 28);
   objets.push({
     type: type, x: hasard(rayon + 12, LARGEUR - rayon - 12), y: -rayon - 8, rayon: rayon,
@@ -110,14 +115,23 @@ function majPanier(dt) {
   panier.vitesse = (panier.x - avant) / Math.max(dt, 0.001);
 }
 function estAttrape(objet) {
+  // la voiture adverse est plus large que les ballons, sa zone de choc aussi
+  const demiLargeur = objet.type === BOMBE ? objet.rayon * 1.3 : objet.rayon * 0.5;
   return objet.y + objet.rayon >= panier.y &&
     objet.y - objet.rayon <= panier.y + panier.hauteur &&
-    objet.x + objet.rayon * 0.5 >= panier.x &&
-    objet.x - objet.rayon * 0.5 <= panier.x + panier.largeur;
+    objet.x + demiLargeur >= panier.x &&
+    objet.x - demiLargeur <= panier.x + panier.largeur;
 }
 function toucherObjet(objet) {
   if (objet.type === BOMBE) {
     creerParticules(objet.x, objet.y, COULEURS.magenta, 28, 320);
+    if (bouclier) {
+      // le bouclier absorbe la voiture adverse
+      bouclier = false;
+      ajouterTexte(objet.x, objet.y - 10, "BOUCLIER CASSÉ", COULEURS.cyan);
+      secouer(6);
+      return;
+    }
     perdreVie(objet.x, objet.y, true);
     return;
   }
@@ -125,13 +139,24 @@ function toucherObjet(objet) {
   chronoCombo = REGLAGES.dureeCombo;
   const multi = multiplicateur();
   const points = (objet.type === DORE ? 50 : 10) * multi;
-  const couleur = objet.type === DORE ? COULEURS.or : COULEURS.cyan;
+  const couleur = objet.type === DORE ? COULEURS.or : objet.type === GLACE ? COULEURS.glace : COULEURS.cyan;
   score += points;
     // compte les cristaux attrapés dans la variable cristaux
   cristaux += 1;
   creerParticules(objet.x, objet.y, couleur, objet.type === DORE ? 24 : 14, 280);
   ajouterTexte(objet.x, objet.y - 10, "+" + points, couleur);
-  if (objet.type === DORE) { sonDore(); flasher(COULEURS.or, 0.18); }
+  if (objet.type === DORE) {
+    // le trophee donne un bouclier
+    sonDore(); flasher(COULEURS.or, 0.18);
+    bouclier = true;
+    ajouterTexte(LARGEUR / 2, HAUTEUR * 0.45, "BOUCLIER", COULEURS.or);
+  }
+  else if (objet.type === GLACE) {
+    // le cristal de glace ralentit tous les objets
+    chronoGlace = REGLAGES.dureeGlace;
+    sonCristal(multi); flasher(COULEURS.glace, 0.25);
+    ajouterTexte(LARGEUR / 2, HAUTEUR * 0.4, "GEL", COULEURS.glace);
+  }
   else { sonCristal(multi); flasher(COULEURS.cyan, 0.06); }
   secouer(3);
 }
@@ -164,6 +189,8 @@ function mettreAJour(dt) {
     chronoCombo -= dt;
     if (chronoCombo <= 0) { chronoCombo = 0; combo = 0; }
   }
+  if (chronoGlace > 0) chronoGlace = Math.max(0, chronoGlace - dt);
+  const ralenti = chronoGlace > 0 ? REGLAGES.ralentiGlace : 1;
   majPanier(dt);
   chronoSpawn -= dt;
   if (chronoSpawn <= 0) {
@@ -172,10 +199,13 @@ function mettreAJour(dt) {
   }
   for (let i = objets.length - 1; i >= 0; i--) {
     const objet = objets[i];
-    objet.y += objet.vitesse * dt;
+    objet.y += objet.vitesse * ralenti * dt;
     objet.rotation += objet.vitesseRotation * dt;
     if (objet.type === DORE && Math.random() < dt * 18) {
       creerParticules(objet.x, objet.y, COULEURS.or, 1, 30);
+    }
+    if (objet.type === GLACE && Math.random() < dt * 18) {
+      creerParticules(objet.x, objet.y, COULEURS.glace, 1, 30);
     }
     if (estAttrape(objet)) {
       objets.splice(i, 1);
@@ -183,7 +213,8 @@ function mettreAJour(dt) {
     } else if (objet.y - objet.rayon > HAUTEUR + 20) {
       objets.splice(i, 1);
       if (objet.type === CRISTAL) perdreVie(objet.x, HAUTEUR - 30, false);
-      else if (objet.type === DORE) ajouterTexte(objet.x, HAUTEUR - 40, "CRISTAL DORÉ PERDU", COULEURS.or);
+      else if (objet.type === DORE) ajouterTexte(objet.x, HAUTEUR - 40, "TROPHÉE PERDU", COULEURS.or);
+      else if (objet.type === GLACE) ajouterTexte(objet.x, HAUTEUR - 40, "BALLON GELÉ PERDU", COULEURS.glace);
     }
   }
   majHud();
@@ -202,6 +233,13 @@ function dessiner() {
     for (const objet of objets) dessinerObjet(ctx, objet, temps);
   }
   dessinerEffets(ctx);
+  if (etat === "jeu" && chronoGlace > 0) {
+    // affiche le temps de gel restant
+    ctx.font = "700 22px ui-monospace, Menlo, monospace";
+    ctx.textAlign = "center";
+    ctx.fillStyle = COULEURS.glace;
+    ctx.fillText("GEL " + chronoGlace.toFixed(1) + " s", LARGEUR / 2, 120);
+  }
   ctx.restore();
   dessinerFlash(ctx);
 }

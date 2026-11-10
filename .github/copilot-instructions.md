@@ -12,6 +12,8 @@ Ce fichier est lu automatiquement par Copilot quand il travaille sur ce dépôt.
 
 ## Règles à respecter
 
+- Thème de mon jeu : ROCKET BALL, voiture-foot. Les ballons remplacent les cristaux, le trophée remplace le doré, le ballon gelé remplace la glace, les voitures adverses remplacent les bombes.
+- Le bouclier s'obtient seulement en attrapant un trophée, et le nom ou le logo Rocket League ne doivent jamais apparaître dans le jeu.
 - Code court et lisible par un débutant : fonctions simples, pas de classes, pas de modules, pas de syntaxe avancée.
 - Noms de variables et de fonctions en français, sans accents dans le code. Commentaires en français.
 - Les réglages (couleurs, vitesses, vies, raretés) restent dans `config.js`.

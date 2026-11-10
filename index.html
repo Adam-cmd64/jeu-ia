@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05030f">
-  <title>Pluie de Néon</title>
+  <title>Rocket Ball</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="page">
     <header class="barre">
-      <span class="barre-nom">PLUIE DE NÉON</span>
+      <span class="barre-nom">ROCKET BALL</span>
       <button id="bouton-son" class="bouton-son" type="button" aria-pressed="true">SON ACTIF</button>
     </header>
 
@@ -32,13 +32,14 @@
           <div class="vies" id="vies" aria-label="Vies restantes">
             <i></i><i></i><i></i>
           </div>
+          <span id="bouclier" class="niveau">BOUCLIER</span>
         </div>
       </div>
 
       <div id="ecran-titre" class="ecran">
-        <p class="sur-titre">JEU MODÈLE / BACHELOR 1</p>
-        <h1 class="titre">PLUIE<br>DE NÉON</h1>
-        <p class="but">Attrape les cristaux.<br>Évite les bombes.</p>
+        <p class="sur-titre">VOITURE FOOT / BACHELOR 1</p>
+        <h1 class="titre">ROCKET<br>BALL</h1>
+        <p class="but">Attrape les ballons.<br>Évite les voitures adverses.</p>
         <button id="bouton-jouer" class="bouton-principal" type="button">JOUER</button>
         <p class="record-titre">RECORD <strong id="record-titre">0</strong></p>
         <p class="commandes">Flèches ou A et D<br>Souris ou doigt</p>
@@ -49,7 +50,7 @@
         <p id="badge-record" class="badge cache">NOUVEAU RECORD</p>
         <p class="etiquette-fin">SCORE</p>
         <p id="fin-score" class="score-fin">0</p>
-                <p class="etiquette-fin">CRISTAUX <strong id="fin-cristaux">0</strong></p>
+                <p class="etiquette-fin">BALLONS <strong id="fin-cristaux">0</strong></p>
         <div class="fin-ligne">
           <span>RECORD</span>
           <strong id="fin-record">0</strong>
@@ -61,7 +62,7 @@
     </section>
 
     <footer class="pied">
-      <span>Attrape les cristaux, évite les bombes, enchaîne pour multiplier les points.</span>
+      <span>Attrape les ballons, évite les voitures adverses, enchaîne pour multiplier les points.</span>
     </footer>
   </main>
   <script src="config.js"></script>
