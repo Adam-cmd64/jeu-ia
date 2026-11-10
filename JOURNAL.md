@@ -24,12 +24,18 @@ Règle : tu colles ici le texte exact de tes prompts (copier-coller, pas de capt
 - Ma question (prompt exact) :
 
 ```
-(colle-le ici)
+Je suis en Bachelor 1, j'ai fait un peu de Go. Explique jeu.js : comment fonctionnent la boucle du jeu, la chute des objets et la détection de l'objet attrapé ? Une phrase par partie.
 ```
 
-- Une affirmation de la réponse que j'ai vérifiée :
-- Comment je l'ai vérifiée (un changement dans le code, un test dans le jeu) :
-- Résultat : exacte, fausse ou incomplète :
+- Ma deuxième question :
+
+```
+Comment le combo est-il remis à zéro ?
+```
+
+- Une affirmation de la réponse que j'ai vérifiée : « la vitesse de chute des objets vient de `vitesseChute` dans config.js (145 au niveau 1) ».
+- Comment je l'ai vérifiée (un changement dans le code, un test dans le jeu) : j'ai mis `vitesseChute` à 500 au lieu de 145 dans config.js, j'ai rechargé le jeu et lancé une partie : les objets tombaient beaucoup plus vite dès le début. Ensuite j'ai remis 145.
+- Résultat : exacte, fausse ou incomplète : exacte.
 
 ## Défi 3 - Plan
 
