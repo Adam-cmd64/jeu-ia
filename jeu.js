@@ -27,6 +27,7 @@ let niveau = 1;
 let tempsJeu = 0;
 let combo = 0;
 let cristaux = 0;
+let chronoGlace = 0;
 let chronoCombo = 0;
 let objets = [];
 let chronoSpawn = 0;
@@ -59,7 +60,7 @@ function demarrerPartie() {
   etat = "jeu";
   score = 0; vies = REGLAGES.viesDepart; niveau = 1; tempsJeu = 0;
   combo = 0; chronoCombo = 0; objets = []; chronoSpawn = 0.45;
-    cristaux = 0;
+    cristaux = 0; chronoGlace = 0;
   panier.x = LARGEUR / 2 - panier.largeur / 2; panier.cibleX = null; panier.vitesse = 0;
   ecranTitre.classList.add("cache");
   ecranFin.classList.add("cache");
@@ -88,7 +89,8 @@ function creerObjet() {
   const tirage = Math.random();
   let type = CRISTAL;
   if (tirage < Math.min(0.42, REGLAGES.hasardBombe + (niveau - 1) * 0.03)) type = BOMBE;
-  else if (tirage > 1 - REGLAGES.hasardDore) type = DORE;
+  else if (tirage > 1 - REGLAGES.hasardGlace) type = GLACE;
+  else if (tirage > 1 - REGLAGES.hasardGlace - REGLAGES.hasardDore) type = DORE;
   const rayon = type === DORE ? 17 : type === BOMBE ? 15 : 13;
   const vitesse = Math.min(REGLAGES.vitesseChuteMax, REGLAGES.vitesseChute + (niveau - 1) * 28);
   objets.push({
@@ -125,13 +127,19 @@ function toucherObjet(objet) {
   chronoCombo = REGLAGES.dureeCombo;
   const multi = multiplicateur();
   const points = (objet.type === DORE ? 50 : 10) * multi;
-  const couleur = objet.type === DORE ? COULEURS.or : COULEURS.cyan;
+  const couleur = objet.type === DORE ? COULEURS.or : objet.type === GLACE ? COULEURS.glace : COULEURS.cyan;
   score += points;
     // compte les cristaux attrapés dans la variable cristaux
   cristaux += 1;
   creerParticules(objet.x, objet.y, couleur, objet.type === DORE ? 24 : 14, 280);
   ajouterTexte(objet.x, objet.y - 10, "+" + points, couleur);
   if (objet.type === DORE) { sonDore(); flasher(COULEURS.or, 0.18); }
+  else if (objet.type === GLACE) {
+    // le cristal de glace ralentit tous les objets
+    chronoGlace = REGLAGES.dureeGlace;
+    sonCristal(multi); flasher(COULEURS.glace, 0.25);
+    ajouterTexte(LARGEUR / 2, HAUTEUR * 0.4, "GEL", COULEURS.glace);
+  }
   else { sonCristal(multi); flasher(COULEURS.cyan, 0.06); }
   secouer(3);
 }
@@ -164,6 +172,8 @@ function mettreAJour(dt) {
     chronoCombo -= dt;
     if (chronoCombo <= 0) { chronoCombo = 0; combo = 0; }
   }
+  if (chronoGlace > 0) chronoGlace = Math.max(0, chronoGlace - dt);
+  const ralenti = chronoGlace > 0 ? REGLAGES.ralentiGlace : 1;
   majPanier(dt);
   chronoSpawn -= dt;
   if (chronoSpawn <= 0) {
@@ -172,7 +182,7 @@ function mettreAJour(dt) {
   }
   for (let i = objets.length - 1; i >= 0; i--) {
     const objet = objets[i];
-    objet.y += objet.vitesse * dt;
+    objet.y += objet.vitesse * ralenti * dt;
     objet.rotation += objet.vitesseRotation * dt;
     if (objet.type === DORE && Math.random() < dt * 18) {
       creerParticules(objet.x, objet.y, COULEURS.or, 1, 30);
@@ -184,6 +194,7 @@ function mettreAJour(dt) {
       objets.splice(i, 1);
       if (objet.type === CRISTAL) perdreVie(objet.x, HAUTEUR - 30, false);
       else if (objet.type === DORE) ajouterTexte(objet.x, HAUTEUR - 40, "CRISTAL DORÉ PERDU", COULEURS.or);
+      else if (objet.type === GLACE) ajouterTexte(objet.x, HAUTEUR - 40, "GLACE PERDUE", COULEURS.glace);
     }
   }
   majHud();
